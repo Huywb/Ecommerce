@@ -1,13 +1,36 @@
-import { useState } from 'react'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "./layout/Layout";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        {
+          index: true,
+          element: <Home />
+        },
+        {
+          path: "login",
+          element: <Login />
+        },
+        {
+          path: "register",
+          element: <Register />
+        },
+        {
+          path: "products/:name",
+          element: <Home />
+        }
+      ]
+    }
+  ]);
 
-  return (
-    <>
-      <h1 className='text-red-600'>tét</h1>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
