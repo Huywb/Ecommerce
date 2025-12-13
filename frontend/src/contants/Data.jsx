@@ -339,3 +339,60 @@ export const FooterList3 = [
     url: '/'
   }
 ]
+
+export const CartStatus = [
+  {
+    id:1,
+    name: "Shopping Cart"
+  },
+  {
+    id:2,
+    name: "Shopping Address"
+  },
+  {
+    id:3,
+    name: "Result"
+  }
+]
+
+export const ProductCart = [
+  {
+    id: 18,
+    name: "Vans Classic",
+    category: "Accessories",
+    tags: "inc",
+    colors: "Blue",
+    sizes: "S",
+    description:
+      "Vans Classic shirt, lightweight and trendy, fits all casual occasions.",
+    price: 32.5,
+    image: "https://picsum.photos/id/1028/300/300",
+    quantity: 2
+  },
+  {
+    id: 19,
+    name: "Champion Active",
+    category: "Jackets",
+    tags: "newset",
+    colors: ["Black", "Green"],
+    sizes: ["M", "L", "XL"],
+    description:
+      "Champion Active T-shirt, soft and flexible, ideal for sports or casual wear.",
+    price: 38.0,
+    image: "https://picsum.photos/id/1029/300/300",
+    quantity:4,
+  },
+  {
+    id: 20,
+    name: "New Balance Comfort",
+    category: "Bags",
+    tags: "bestsell",
+    colors: ["White", "Gray"],
+    sizes: ["S", "M", "L", "XL"],
+    description:
+      "New Balance Comfort tee with high-quality cotton, suitable for gym or casual daily use.",
+    price: 41.0,
+    image: "https://picsum.photos/id/1030/300/300",
+    quantity:1
+  }
+]
