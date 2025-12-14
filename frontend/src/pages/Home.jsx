@@ -1,9 +1,12 @@
-import React from 'react'
+import { useState } from 'react'
 import Banner from '../components/Banner'
 import MenuItem from '../components/MenuItem'
-import ListProducts from '../components/ListProducts'
+import ListProducts from '../components/product/ListProducts'
+import { ProductList } from '../contants/Data'
 
 const Home = () => {
+
+  const productList = ProductList.filter(item=>item.id<9)
   return (
     <main className='flex flex-col gap-10'>
         <section>
@@ -13,7 +16,7 @@ const Home = () => {
           <MenuItem />
         </section>
         <section>
-          <ListProducts />
+          <ListProducts productList={productList} />
         </section>
     </main>
   )
