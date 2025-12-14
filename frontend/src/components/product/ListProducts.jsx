@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ProductList } from '../contants/Data'
+import { ProductList } from '../../contants/Data'
 import ProductCard from './ProductCard'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -9,7 +9,9 @@ const ListProducts = ({productList}) => {
     <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4  gap-4'>
         {
             productList.map((item,index)=>( 
+                  <>
                   <ProductCard item={item}/>
+                  </>
             ))
         }
     </div>

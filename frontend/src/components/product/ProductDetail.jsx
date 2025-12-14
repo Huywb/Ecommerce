@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { ProductList } from '../contants/Data'
+import { ProductList } from '../../contants/Data'
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
-import stripe from '../../public/stripe.png'
-import klarna from '../../public/klarna.png'
-import cards from '../../public/cards.png'
+import stripe from '../../../public/stripe.png'
+import klarna from '../../../public/klarna.png'
+import cards from '../../../public/cards.png'
 
 const ProductDetail = () => {
   const {id} = useParams()

@@ -351,7 +351,7 @@ export const CartStatus = [
   },
   {
     id:3,
-    name: "Result"
+    name: "Payment Method"
   }
 ]
 

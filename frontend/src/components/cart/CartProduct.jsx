@@ -1,6 +1,6 @@
 import React from 'react'
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { ProductCart } from '../contants/Data';
+import { ProductCart } from '../../contants/Data';
 const CartProduct = () => {
   return (
     <div className='flex flex-col gap-10 w-full border border-gray-200  p-2'>
