@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import ListProducts from '../components/ListProducts'
+import ListProducts from '../components/product/ListProducts'
 import MenuItem from '../components/MenuItem'
 import { ProductList } from '../contants/Data'
 import { useLocation } from 'react-router-dom'
+import Search from '../components/Search'
 
 const Products = () => {
     const [products,setProducts] = useState(ProductList)
@@ -64,6 +65,18 @@ const Products = () => {
         }
     }
 
+    const handleSearchChange = (value)=>{
+        if(!value){
+            setProducts(ProductList)
+            console.log(9)
+        }else{
+            console.log(1)
+        let SearchItem = originalProducts.filter((item)=>item.name.includes(value.toLowerCase()))
+        setProducts(SearchItem)
+        }
+    }
+    console.log(originalProducts)
+
 
 
   return (
@@ -71,14 +84,18 @@ const Products = () => {
         <section>
           <MenuItem changeCategory={SelectedCategory}/>
         </section>
-        <div className='flex items-center justify-end gap-2 py-5'>
-            <span>Sort by :</span>
-            <select name="sort" onChange={(e) => handleChangeSort(e.target.value)} className='py-1 px-2 border border-gray-400 outline-none rounded-md shadow-xl cursor-pointer pr-10'>
-                <option value="newest"  >Newest</option>
-                <option value="dec" >High to Low</option>
-                <option value="inc" > Low to Hight</option>
-                <option value="best" >Best Sell</option>
-            </select>
+        <div className='flex items-center justify-end gap-2 py-5 sm:flex-row flex-col'>
+            <Search handleSearchChange={handleSearchChange}/>
+            <div className='flex items-center gap-2'>
+                <span>Sort by :</span>
+                <select name="sort" onChange={(e) => handleChangeSort(e.target.value)} className='py-1 px-2 border border-gray-400 outline-none rounded-md shadow-xl cursor-pointer pr-10'>
+                    <option value="newest"  >Newest</option>
+                    <option value="dec" >High to Low</option>
+                    <option value="inc" > Low to Hight</option>
+                    <option value="best" >Best Sell</option>
+                </select>
+            </div>
+            
         </div>
         <section>
           <ListProducts productList={currentProducts} />
