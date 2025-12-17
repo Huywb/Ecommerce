@@ -78,3 +78,44 @@ export const Order = [
         url : '/admin/orders'
     }
 ]
+
+export const TotalBarData = [
+  {
+    name: new Date(Date.now()).getMonth()-4,
+    Total: 3000,
+    Successfull: 1398,
+  },
+  {
+    name: new Date(Date.now()).getMonth()-3,
+    Total: 2000,
+    Successfull: 9800,
+  },
+  {
+    name: new Date(Date.now()).getMonth()-2,
+    Total: 2780,
+    Successfull: 3908,
+  },
+  {
+    name: new Date(Date.now()).getMonth()-1,
+    Total: 1890,
+    Successfull: 4800,
+  },
+  {
+    name: new Date(Date.now()).getMonth(),
+    Total: 2390,
+    Successfull: 3800,
+  },
+  {
+    name: new Date(Date.now()).getMonth()+1,
+    Total: 3490,
+    Successfull: 4300,
+  },
+];
+
+export const CircleData = [
+  { name: 'Tiktok', value: 400 ,fill: '#0088FE'},
+  { name: 'Facebook', value: 300 , fill: '#00C49F'},
+  { name: 'Youtube', value: 300 , fill: '#FFBB28' },
+  { name: 'Shoppe', value: 200, fill: '#FF8042' },
+  { name: 'Lazada', value: 278, fill: '#651fff' },
+];
