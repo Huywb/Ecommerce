@@ -4,7 +4,8 @@ import {
   XAxis,
   YAxis,
   Bar,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Tooltip
 } from "recharts";
 import { TotalBarData } from "../../contants/DataAdmin";
 
@@ -19,6 +20,7 @@ const TotalChart = () => {
         <BarChart data={TotalBarData}>
           <XAxis dataKey="name" stroke="#9ca3af" />
           <YAxis stroke="#9ca3af" />
+          <Tooltip />
           <Legend />
           <Bar dataKey="Total" fill="#2979ff" radius={[4,4,0,0]} />
           <Bar dataKey="Successfull" fill="#651fff" radius={[4,4,0,0]} />

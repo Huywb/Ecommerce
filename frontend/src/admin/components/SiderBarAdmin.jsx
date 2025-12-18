@@ -7,7 +7,7 @@ import { IoIosLogOut } from "react-icons/io";
 
 const SiderBarAdmin = ({hideSiderBar}) => {
   return (
-    <div className={`flex flex-col p-4 gap-5  w-full text-white justify-between text-sm `}>
+    <div className={`h-full flex flex-col p-4 gap-5  w-full text-white justify-between text-sm `}>
         <div className={`flex flex-col gap-2 ${hideSiderBar ? 'gap-5 text-xl' : ''}`}>
             <div className='flex gap-2 items-center'>
                 <img src={logo} alt="logo user" className='rounded-full w-8' />
