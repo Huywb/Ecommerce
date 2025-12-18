@@ -5,7 +5,7 @@ const CircleChart = () => {
 
 const total = CircleData.reduce((sum, item) => sum + item.value, 0);
     return (
-   <div className="w-full  ">
+   <div className="w-full">
         <h3 className="text-white font-semibold p-2 pb-4 ">
             Browser Usage
         </h3>
