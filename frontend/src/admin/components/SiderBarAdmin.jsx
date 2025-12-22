@@ -5,8 +5,16 @@ import { FaPlus } from "react-icons/fa6";
 import { GoPerson } from "react-icons/go";
 import { IoIosLogOut } from "react-icons/io";
 
-const SiderBarAdmin = ({hideSiderBar}) => {
-  return (
+const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserForm}) => {
+    
+    const SiderBarToggleShowAddProductForm = (value) => {
+        ToggleShowAddProductForm(value)
+    }
+    const SiderBarToggleShowAddUserForm = () => {
+        ToggleShowAddUserForm()
+    }
+  
+    return (
     <div className={`h-full flex flex-col p-4 gap-5  w-full text-white justify-between text-sm `}>
         <div className={`flex flex-col gap-2 ${hideSiderBar ? 'gap-5 text-xl' : ''}`}>
             <div className='flex gap-2 items-center'>
@@ -42,7 +50,7 @@ const SiderBarAdmin = ({hideSiderBar}) => {
                 
                 {
                     Product.map((item,index)=>(
-                        <Link to={item.url} key={index} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
+                        <Link to={item.url} key={index} onClick={() => SiderBarToggleShowAddProductForm(item.type)} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
                             {item.icon}
                             {hideSiderBar ? '' : <span>{item.name}</span>}
                         </Link>
@@ -60,7 +68,7 @@ const SiderBarAdmin = ({hideSiderBar}) => {
                 </div>
                 {
                     User.map((item,index)=>(
-                        <Link to={item.url} key={index} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
+                        <Link to={item.url} key={index} onClick={SiderBarToggleShowAddUserForm} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
                             {item.icon}
                             {hideSiderBar ? '' : <span>{item.name}</span>}
                         </Link>

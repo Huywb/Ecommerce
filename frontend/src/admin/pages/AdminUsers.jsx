@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { UsersAdmin } from '../contants/DataAdmin'
-import { IoIosMore } from "react-icons/io";
-
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 const AdminUsers = () => {
     const [showActions,setShowActions] = useState(null);
     const [page,setPage] = useState(1);
@@ -66,14 +66,9 @@ const AdminUsers = () => {
                         <div className='w-1/8 '>
                             <h2 className={`px-2 py-1 ${item.status === "Active" ? "bg-green-500" : "bg-red-500"} w-fit rounded-lg`}>{item.status}</h2>
                         </div>
-                        <div className='w-1/8 relative'>
-                            <IoIosMore size={20} onClick={() => handleShowActions(item.id)} className='cursor-pointer opacity-50 hover:opacity-95 transition-all duration-300'/>
-                            {showActions === item.id && (
-                                <div className='absolute bg-[#171717] flex flex-col z-30 '>
-                                    <button onClick={() => handleEditUser(item.id)} className='cursor-pointer hover:bg-gray-600 p-2 px-4 transition-all duration-300'>Edit</button>
-                                    <button onClick={() => handleDeleteUser(item.id)} className='cursor-pointer hover:bg-gray-600 p-2 px-4 transition-all duration-300'>Delete</button>
-                                </div>
-                            )}
+                        <div className='w-1/8 flex gap-2 '>
+                            <FaEdit onClick={() => handleEditUser(item.id)} size={24} className='text-green-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 '/>
+                            <MdDeleteForever onClick={() => handleDeleteUser(item.id)} size={24} className='text-red-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 '/>
                         </div>
                     </div>
                 ))
