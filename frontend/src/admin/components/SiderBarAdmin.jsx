@@ -10,8 +10,8 @@ const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserF
     const SiderBarToggleShowAddProductForm = (value) => {
         ToggleShowAddProductForm(value)
     }
-    const SiderBarToggleShowAddUserForm = () => {
-        ToggleShowAddUserForm()
+    const SiderBarToggleShowAddUserForm = (value) => {
+        ToggleShowAddUserForm(value)
     }
   
     return (
@@ -68,7 +68,7 @@ const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserF
                 </div>
                 {
                     User.map((item,index)=>(
-                        <Link to={item.url} key={index} onClick={SiderBarToggleShowAddUserForm} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
+                        <Link to={item.url} key={index} onClick={()=>SiderBarToggleShowAddUserForm(item.type)} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
                             {item.icon}
                             {hideSiderBar ? '' : <span>{item.name}</span>}
                         </Link>

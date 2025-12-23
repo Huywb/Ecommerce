@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import HeaderAdmin from '../components/HeaderAdmin'
 import SiderBarAdmin from '../components/SiderBarAdmin'
+import AddProductForm from '../components/products/AddProductForm'
+import AddCategory from '../components/products/AddCategory'
+import AddUserForm from '../components/users/AddUserForm'
 
 const LayoutAdmin = () => {
   const [hideSiderBar, setHideSiderBar] = useState(false)
@@ -20,8 +23,12 @@ const LayoutAdmin = () => {
     }
   }
 
-  const ToggleShowAddUserForm = () => {
-    setShowAddUserForm(!showAddUserForm)
+  const ToggleShowAddUserForm = (value) => {
+    if(value == 'user'){
+      setShowAddUserForm(!showAddUserForm)
+    }else{
+      setShowAddUserForm(false)
+    }
   }
 
   const ToggleHideSiderBar = () => {
@@ -53,24 +60,10 @@ const LayoutAdmin = () => {
             hideSiderBar={hideSiderBar}
           />
           <Outlet />
-          {
-            <div className={`fixed inset-0 z-50 flex text-white transition-opacity duration-300 ${showAddProductForm ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-              <div onClick={ToggleShowAddProductForm} className="absolute inset-0 bg-black/50"/>
-              <div className={`ml-auto h-full w-[400px] bg-[#0b0b0b] border-l border-gray-800 transform transition-transform duration-300 ease-in-out
-                ${showAddProductForm ? 'translate-x-0' : 'translate-x-full'}`}
-              >
-                <div className="flex justify-between items-center p-4">
-                  <h2 className="text-xl font-semibold">Add Category</h2>
-                  <button
-                    className="p-2 bg-red-500 text-white rounded-lg"
-                    onClick={() => ToggleShowAddProductForm('')}
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          }
+
+          <AddProductForm showAddProductForm={showAddProductForm} ToggleShowAddProductForm={ToggleShowAddProductForm} />
+          <AddCategory showAddCategoryForm={showAddCategoryForm} ToggleShowAddProductForm={ToggleShowAddProductForm} />
+          <AddUserForm showAddUserForm={showAddUserForm} ToggleShowAddUserForm={ToggleShowAddUserForm} />
         </div>
       </section>
     </div>

@@ -65,12 +65,14 @@ export const User = [
     {
         name: "See All Users",
         icon : <FaRegUser />,
-        url : '/admin/users'
+        url : '/admin/users',
+        type: '#'
     },
     {
         name : "Add User",
         icon : <FaPlus />,
-        url : '#'
+        url : '#',
+        type: 'user'
     }
 ]
 
@@ -574,4 +576,24 @@ export const ProductsAdmin = [
     newArrival: true,
     description: 'Sport gloves designed for training and gym workouts.',
   },
+]
+
+export const allSizes = [
+  'XS', 'S', 'M', 'L',
+  28, 29, 30, 31, 32, 33, 34, 35, 36
+]
+
+export const colorOptions = [
+  { label: 'Black', value: 'black', hex: '#000000' },
+  { label: 'White', value: 'white', hex: '#ffffff' },
+  { label: 'Gray', value: 'gray', hex: '#9ca3af' },
+  { label: 'Red', value: 'red', hex: '#ef4444' },
+  { label: 'Blue', value: 'blue', hex: '#3b82f6' },
+  { label: 'Green', value: 'green', hex: '#22c55e' },
+  { label: 'Yellow', value: 'yellow', hex: '#eab308' },
+  { label: 'Orange', value: 'orange', hex: '#f97316' },
+  { label: 'Purple', value: 'purple', hex: '#a855f7' },
+  { label: 'Pink', value: 'pink', hex: '#ec4899' },
+  { label: 'Brown', value: 'brown', hex: '#92400e' },
+  { label: 'Navy', value: 'navy', hex: '#1e3a8a' },
 ]
