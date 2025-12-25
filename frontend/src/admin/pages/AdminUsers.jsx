@@ -2,20 +2,19 @@ import { useState } from 'react';
 import { UsersAdmin } from '../contants/DataAdmin'
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import { useOutletContext } from 'react-router-dom';
 const AdminUsers = () => {
-    const [showActions,setShowActions] = useState(null);
+
+    const {EditUserById} = useOutletContext();
+
     const [page,setPage] = useState(1);
     
-    const handleShowActions = (index) => {
-        setShowActions(showActions === index ? null : index);
-    }
-
     const handleDeleteUser = (index) => {
         console.log("Delete user at index:", index);
     }
 
     const handleEditUser = (index) => {
-        console.log("Edit user at index:", index);
+        EditUserById(UsersAdmin.find(item=>item.id ==  index));
     }
 
     let productPerPage = 6
@@ -24,69 +23,69 @@ const AdminUsers = () => {
     let end = start + productPerPage;
     let currentUsers = UsersAdmin.slice(start, end);
   return (
-    <div className='flex flex-col px-6  gap-2 text-white mt-4 text-xs md:text-sm'>
-        <h1 className='text-xl font-semibold bg-[#262626] rounded-lg p-2'>All Users</h1>
-        <div className='flex flex-col gap-2 border rounded-lg border-gray-800'>
-            <div className='flex w-full  p-2 font-semibold'>
-                <div className='w-1/8 '>
-                    <h2>Avatar</h2>
-                </div>
-                <div className='w-2/8 '>
-                    <h2>User</h2>
-                </div>
-                <div className='w-3/8 '>
-                    <h2>Email</h2>
-                </div>
-                <div className='w-1/8 '>
-                    <h2>Role</h2>
-                </div>
-                <div className='w-1/8 '>
-                    <h2>Status</h2>
-                </div>
-                <div className='w-1/8 '>
-                    <h2>Actions</h2>
-                </div>
-            </div>
-            {
-                currentUsers.map((item,index)=>(
-                    <div key={index} className='flex w-full border-t border-gray-800 p-2 items-center justify-center'>
-                        <div className='w-1/8 '>
-                            <img src={item.avatar} alt="user image" className='w-10 h-10 rounded-lg' />
-                        </div>
-                        <div className='w-2/8 '>
-                            <h2>{item.name}</h2>
-                        </div>
-                        <div className='w-3/8 '>
-                            <h2>{item.email}</h2>
-                        </div>
-                        <div className='w-1/8 '>
-                            <h2 className={`px-2 py-1 ${item.role === "Admin" ? "bg-green-500" : "bg-red-500"} w-fit rounded-lg`}>{item.role}</h2>
-                            
-                        </div>
-                        <div className='w-1/8 '>
-                            <h2 className={`px-2 py-1 ${item.status === "Active" ? "bg-green-500" : "bg-red-500"} w-fit rounded-lg`}>{item.status}</h2>
-                        </div>
-                        <div className='w-1/8 flex gap-2 '>
-                            <FaEdit onClick={() => handleEditUser(item.id)} size={24} className='text-green-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 '/>
-                            <MdDeleteForever onClick={() => handleDeleteUser(item.id)} size={24} className='text-red-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 '/>
-                        </div>
-                    </div>
-                ))
-            }
-        </div>
+      <div className='flex flex-col px-6  gap-2 text-white mt-4 text-xs md:text-sm'>
+          <h1 className='text-xl font-semibold bg-[#262626] rounded-lg p-2'>All Users</h1>
+          <div className='flex flex-col gap-2 border rounded-lg border-gray-800'>
+              <div className='flex w-full  p-2 font-semibold'>
+                  <div className='w-1/8 '>
+                      <h2>Avatar</h2>
+                  </div>
+                  <div className='w-2/8 '>
+                      <h2>User</h2>
+                  </div>
+                  <div className='w-3/8 '>
+                      <h2>Email</h2>
+                  </div>
+                  <div className='w-1/8 '>
+                      <h2>Role</h2>
+                  </div>
+                  <div className='w-1/8 '>
+                      <h2>Status</h2>
+                  </div>
+                  <div className='w-1/8 '>
+                      <h2>Actions</h2>
+                  </div>
+              </div>
+              {
+                  currentUsers.map((item, index) => (
+                      <div key={index} className='flex w-full border-t border-gray-800 p-2 items-center justify-center'>
+                          <div className='w-1/8 '>
+                              <img src={item.avatar} alt="user image" className='w-10 h-10 rounded-lg' />
+                          </div>
+                          <div className='w-2/8 '>
+                              <h2>{item.name}</h2>
+                          </div>
+                          <div className='w-3/8 '>
+                              <h2>{item.email}</h2>
+                          </div>
+                          <div className='w-1/8 '>
+                              <h2 className={`px-2 py-1 ${item.role === "Admin" ? "bg-green-500" : "bg-red-500"} w-fit rounded-lg`}>{item.role}</h2>
 
-        <div className='flex w-full mt-2 justify-center gap-2'>
-            {
-                page > 1 &&
-                <button onClick={()=>setPage(page - 1)} className={`px-2 border rounded-md cursor-pointer ${page == page-1 ? 'bg-[#262626] text-white' : ''}`}>{page - 1 }</button>
-            }
-            <button onClick={()=>setPage(page)} className={`px-2 border rounded-md cursor-pointer ${page == page ? 'bg-[#262626] text-white' : ''}`}>{page}</button>
-            {
-                page < totalPage &&
-            <button onClick={()=>setPage(page + 1)}  className={`px-2 border rounded-md cursor-pointer ${page == page+1 ? 'bg-[#262626] text-white' : ''}`}>{page + 1}</button>
-            }
-        </div>
-    </div>
+                          </div>
+                          <div className='w-1/8 '>
+                              <h2 className={`px-2 py-1 ${item.status === "Active" ? "bg-green-500" : "bg-red-500"} w-fit rounded-lg`}>{item.status}</h2>
+                          </div>
+                          <div className='w-1/8 flex gap-2 '>
+                              <FaEdit onClick={() => handleEditUser(item.id)} size={24} className='text-green-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
+                              <MdDeleteForever onClick={() => handleDeleteUser(item.id)} size={24} className='text-red-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
+                          </div>
+                      </div>
+                  ))
+              }
+          </div>
+
+          <div className='flex w-full mt-2 justify-center gap-2'>
+              {
+                  page > 1 &&
+                  <button onClick={() => setPage(page - 1)} className={`px-2 border rounded-md cursor-pointer ${page == page - 1 ? 'bg-[#262626] text-white' : ''}`}>{page - 1}</button>
+              }
+              <button onClick={() => setPage(page)} className={`px-2 border rounded-md cursor-pointer ${page == page ? 'bg-[#262626] text-white' : ''}`}>{page}</button>
+              {
+                  page < totalPage &&
+                  <button onClick={() => setPage(page + 1)} className={`px-2 border rounded-md cursor-pointer ${page == page + 1 ? 'bg-[#262626] text-white' : ''}`}>{page + 1}</button>
+              }
+          </div>
+      </div>
   )
 }
 

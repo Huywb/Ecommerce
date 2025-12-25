@@ -2,27 +2,26 @@ import { useState } from 'react';
 import { ProductsAdmin, UsersAdmin } from '../contants/DataAdmin'
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import { useOutletContext } from 'react-router-dom';
 const AdminProducts = () => {
-  const [showActions,setShowActions] = useState(null);
-      const [page,setPage] = useState(1);
-      
-      const handleShowActions = (index) => {
-          setShowActions(showActions === index ? null : index);
-      }
-  
-      const handleDeleteProduct = (index) => {
-          console.log("Delete product at index:", index);
-      }
 
-      const handleEditProduct = (index) => {
-          console.log("Edit product at index:", index);
-      }
+  const { EditProductById } = useOutletContext();
   
-      let productPerPage = 6
-      let totalPage = Math.ceil(ProductsAdmin.length/ productPerPage)
-      let start = (page - 1) * productPerPage;
-      let end = start + productPerPage;
-      let currentProducts = ProductsAdmin.slice(start, end);
+  const handleEditProduct = (index) => {
+    EditProductById(ProductsAdmin.find(item=>item.id ==  index));
+  }
+  const [page, setPage] = useState(1);
+
+  const handleDeleteProduct = (index) => {
+    console.log("Delete product at index:", index);
+  }
+
+
+  let productPerPage = 6
+  let totalPage = Math.ceil(ProductsAdmin.length / productPerPage)
+  let start = (page - 1) * productPerPage;
+  let end = start + productPerPage;
+  let currentProducts = ProductsAdmin.slice(start, end);
   return (
     <div className='flex flex-col px-6  gap-2 text-white mt-4 text-xs md:text-sm'>
       <h1 className='text-xl font-semibold bg-[#262626] rounded-lg p-2'>All Products</h1>
