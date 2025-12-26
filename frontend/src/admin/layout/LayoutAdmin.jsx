@@ -12,22 +12,47 @@ const LayoutAdmin = () => {
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false)
   const [showAddUserForm, setShowAddUserForm] = useState(false)
 
+  const [categoryInfo, setCategoryInfo] = useState(null)
+  const [productInfo, setProductInfo] = useState(null)
+  const [userInfo, setUserInfo] = useState(null)
+
+  const EditProductById = (item)=>{
+    setProductInfo(item)
+    setShowAddProductForm(true)
+  }
+
+  const EditCategoryById = (item)=>{
+    setCategoryInfo(item)
+    setShowAddCategoryForm(true)
+  }
+
+  const EditUserById = (item)=>{
+    setUserInfo(item)
+    setShowAddUserForm(true)
+  }
+
+
   const ToggleShowAddProductForm = (value) => {
     if(value == 'product'){
-      setShowAddProductForm(!showAddProductForm)
+      setShowAddProductForm(true)
     }else if(value == 'category'){
-      setShowAddCategoryForm(!showAddCategoryForm)
+      setShowAddCategoryForm(true)
     }else{
       setShowAddProductForm(false)
       setShowAddCategoryForm(false)
+      setCategoryInfo(null)
+      setProductInfo(null)
     }
   }
 
+  
+
   const ToggleShowAddUserForm = (value) => {
     if(value == 'user'){
-      setShowAddUserForm(!showAddUserForm)
+      setShowAddUserForm(true)
     }else{
       setShowAddUserForm(false)
+      setUserInfo(null)
     }
   }
 
@@ -35,9 +60,6 @@ const LayoutAdmin = () => {
     setHideSiderBar(!hideSiderBar)
   }
 
-  console.log(showAddProductForm);
-  console.log(showAddCategoryForm);
-  console.log(showAddUserForm);
 
   return (
     <div className="min-h-screen bg-[#0b0b0b]">
@@ -59,11 +81,11 @@ const LayoutAdmin = () => {
             ToggleHideSiderBar={ToggleHideSiderBar}
             hideSiderBar={hideSiderBar}
           />
-          <Outlet />
+          <Outlet context={{EditCategoryById,EditProductById,EditUserById}} />
 
-          <AddProductForm showAddProductForm={showAddProductForm} ToggleShowAddProductForm={ToggleShowAddProductForm} />
+          <AddProductForm productInfo={productInfo} showAddProductForm={showAddProductForm} ToggleShowAddProductForm={ToggleShowAddProductForm} />
           <AddCategory showAddCategoryForm={showAddCategoryForm} ToggleShowAddProductForm={ToggleShowAddProductForm} />
-          <AddUserForm showAddUserForm={showAddUserForm} ToggleShowAddUserForm={ToggleShowAddUserForm} />
+          <AddUserForm InfoUser={userInfo} showAddUserForm={showAddUserForm} ToggleShowAddUserForm={ToggleShowAddUserForm} />
         </div>
       </section>
     </div>

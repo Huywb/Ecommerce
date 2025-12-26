@@ -1,20 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MenuList } from '../../../contants/Data'
 import { allSizes, colorOptions } from '../../contants/DataAdmin'
 
-const AddProductForm = ({showAddProductForm, ToggleShowAddProductForm}) => {
+const AddProductForm = ({showAddProductForm, ToggleShowAddProductForm,productInfo}) => {
     const [selectedColors, setSelectedColors] = useState([{image: '',color: ''}])
 
+    console.log("productInfo:", productInfo);
     const [selectedProductInfo,setSelectedProductInfo] = useState({
-        name: '',
-        description: '',
-        price: 0,
-        category: '',
-        sizes: [],
-        colors: [],
-        images: [],
+        name: productInfo?.name || '',
+        description: productInfo?.description || '',
+        price: productInfo?.price || 0,
+        category: productInfo?.category || '',
+        sizes: productInfo?.sizes || [],
+        colors: productInfo?.colors || [],
+        images: productInfo?.image || [],
     })
-    console.log(selectedProductInfo)
+
+
+    useEffect(()=>{
+        if(productInfo){
+            setSelectedProductInfo({
+                name: productInfo?.name || '',
+                description: productInfo?.description || '',
+                price: productInfo?.price || 0,
+                category: productInfo?.category || '',
+                sizes: productInfo?.sizes || [],
+                colors: productInfo?.colors || [],
+                images: productInfo?.images || [],
+            })
+        }
+    }
+    ,[productInfo])
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle form submission logic here
+        console.log(selectedProductInfo);
+        setSelectedProductInfo({
+            name: '',
+            description: '',
+            price: 0,
+            category: '',
+            sizes: [],
+        });
+        setSelectedColors([{image: '',color: ''}])
+    }
 
     const handlechangeInfo = (e) => {
         setSelectedProductInfo((prev)=>({...prev,[e.target.name]: e.target.value}))
@@ -145,6 +174,8 @@ const AddProductForm = ({showAddProductForm, ToggleShowAddProductForm}) => {
                             </div>    
                         <span className='text-gray-500'>Select the available colors for the product</span>
                     </div>
+
+                    <button type="submit" onClick={handleSubmit} className="cursor-pointer bg-[#171717] text-white py-2 my-2 px-4 rounded-lg hover:bg-gray-800 transition duration-300">{productInfo ? 'Edit Product' : 'Add Product'}</button>
                 </div>
             </div>
         </div>
