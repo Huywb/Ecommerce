@@ -11,4 +11,5 @@ router.get('/all', validateAccessToken, GetAllUsers)
 router.get('/:id', validateAccessToken, GetUserById)
 router.patch('/update/:id', validateAccessToken, UpdateUserById)
 router.delete('/delete/:id', validateAccessToken, DeleteUserById)
+
 export default router;
