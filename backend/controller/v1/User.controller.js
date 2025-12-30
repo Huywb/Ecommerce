@@ -1,5 +1,5 @@
-import { generateAccessToken } from "../../middleware/GenerationToken"
-import User from "../../models/User.model"
+import { generateAccessToken } from "../../middleware/GenerationToken.js"
+import User from "../../models/User.model.js"
 import bcrypt from "bcryptjs"
 
 export const Login =async (req,res)=>{
