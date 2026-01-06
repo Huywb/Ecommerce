@@ -1,14 +1,14 @@
 import express from 'express'
-import { validateAccessToken } from '../middleware/GenerationToken'
-import { AddCategory, GetCategoryById, UpdateCategory } from '../controller/v1/Category.controller'
+import { checkRole, validateAccessToken } from '../middleware/GenerationToken'
+import { AddCategory, DeleteCategory, GetAllCategory, GetCategoryById, UpdateCategory } from '../controller/v1/Category.controller'
 
 
 const router = express.Router()
 
-router.get('/all',validateAccessToken,GetAllCategory)
-router.get('/:id',validateAccessToken,GetCategoryById)
-router.post('/create',validateAccessToken,AddCategory)
-router.patch('/update/:id',validateAccessToken,UpdateCategory)
-router.delete('/delete/:id',validateAccessToken,DeleteCategory)
+router.get('/all',validateAccessToken,checkRole('admin'),GetAllCategory)
+router.get('/:id',validateAccessToken,checkRole('admin'),GetCategoryById)
+router.post('/create',validateAccessToken,checkRole('admin'),AddCategory)
+router.patch('/update/:id',validateAccessToken,checkRole('admin'),UpdateCategory)
+router.delete('/delete/:id',validateAccessToken,checkRole('admin'),DeleteCategory)
 
 export default router
