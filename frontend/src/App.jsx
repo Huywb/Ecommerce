@@ -11,6 +11,8 @@ import LayoutAdmin from "./admin/layout/LayoutAdmin";
 import AdminUsers from "./admin/pages/AdminUsers";
 import AdminProducts from "./admin/pages/AdminProducts";
 import AdminOrders from "./admin/pages/AdminOrders";
+import Profile from "./pages/Profile";
+import Order from "./pages/Order";
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +39,14 @@ function App() {
         {
           path: "cart",
           element: <Cart />
+        },
+        {
+          path: "profile",
+          element: <Profile />
+        },
+        {
+          path: "order",
+          element: <Order />
         }
       ],
     },
