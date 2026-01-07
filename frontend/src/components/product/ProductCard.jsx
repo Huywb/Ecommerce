@@ -48,7 +48,7 @@ const ProductCard = (item) => {
                 <div className='flex gap-2'>
                 {
                     item.item.colors.map((item,index)=>(
-                        <div name='color' onClick={()=>setProductInfo((prev)=>({...prev,color: item}))} className={`rounded-full w-5 h-5 cursor-pointer border-2 ${
+                        <div key={index} name='color' onClick={()=>setProductInfo((prev)=>({...prev,color: item}))} className={`rounded-full w-5 h-5 cursor-pointer border-2 ${
                         productInfo.color === item ? "ring-2 ring-gray-600" : ""
                         }`} style={{ backgroundColor: item.toLowerCase() }}></div>
                     ))

@@ -8,15 +8,14 @@ import { AxiosHttp } from '../libs/BaseAxios';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../redux-toolkit/userSlice';
-
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const [changeMode, setChangeMode] = useState('Login')
     const [hidePass, setHidePass] = useState(false)
     const [hideComfirmPass, setHideComfirmPass] = useState(false)
-    const selected = useSelector((state) => state.user)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    console.log('data', selected)
     const { register, handleSubmit } = useForm()
 
     const onSubmit = async (data) => {
@@ -38,6 +37,7 @@ const Login = () => {
                     }))
 
                     toast.success("Login success")
+                    navigate('/')
                 } else {
                     toast.error(res.data.data.message)
                 }
@@ -59,7 +59,7 @@ const Login = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='flex items-center justify-center  gap-4 p-4 '>
             <div className='flex min-w-[80%] gap-10 p-10 border rounded-md border-gray-200 shadow-2xl'>
-                <div className={`w-1/2 transition-all duration-300 ${changeMode == "Register" ? "translate-x-full " : 'translate-x-0 '}`}>
+                <div className={`w-1/2 transition-all duration-300`}>
                     <img src={`${changeMode == "Login" ? login : register1}`} alt="login image" className='object-cover overflow-hidden' />
                 </div>
                 <div className={`w-1/2 flex flex-col gap-10 transition-all duration-300 ${changeMode == "Login" ? "translate-x-0 " : '-translate-x-full pr-20'}`}>
