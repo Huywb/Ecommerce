@@ -9,9 +9,9 @@ const ListProducts = ({productList}) => {
     <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4  gap-4'>
         {
             productList.map((item,index)=>( 
-                  <>
+                  <div key={index}>
                   <ProductCard item={item}/>
-                  </>
+                  </div>
             ))
         }
     </div>
