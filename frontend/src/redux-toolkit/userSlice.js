@@ -7,7 +7,7 @@ const initialState = {
     role: '',
     phone: '',
     address: '',
-    token: ''
+    images: ''
 }
 
 export const userSlice = createSlice({
