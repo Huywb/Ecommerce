@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist'
 import userReducer from './userSlice'
 
 const persistConfig = {
-  key: 'root1',
+  key: 'root2',
   storage,
   whitelist: ['user'], 
 }
