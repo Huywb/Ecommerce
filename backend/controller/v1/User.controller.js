@@ -1,120 +1,150 @@
+import { deleteImage, uploadImage } from "../../middleware/Cloudinary-api.js"
 import { generateAccessToken } from "../../middleware/GenerationToken.js"
 import User from "../../models/User.model.js"
 import bcrypt from "bcryptjs"
+import fs from 'fs'
 
-export const Login =async (req,res)=>{
+export const Login = async (req, res) => {
     try {
-        const {email, password} = req.body
-        if(!email || !password ){
-            return res.status(400).json({message:"All fields are required",status:false})
+        const { email, password } = req.body
+        if (!email || !password) {
+            return res.status(400).json({ message: "All fields are required", status: false })
         }
-        const checkUser = await User.findOne({email})
-        if(!checkUser){
-            return res.status(404).json({message:'User not found',status: false})
+        const checkUser = await User.findOne({ email })
+        if (!checkUser) {
+            return res.status(404).json({ message: 'User not found', status: false })
         }
-        const passwordMatch = await bcrypt.compare(password,checkUser.password)
-        if(!passwordMatch){
-            return res.status(400).json({message:"Email or Password wrong",status:false})
+        const passwordMatch = await bcrypt.compare(password, checkUser.password)
+        if (!passwordMatch) {
+            return res.status(400).json({ message: "Email or Password wrong", status: false })
         }
-        const token = generateAccessToken(checkUser._id)
-        res.status(200).json({message:"Login successfull",status:true, data: {token,checkUser}})
+        const token = generateAccessToken(checkUser)
+        res.cookie('token', token, {
+            httpOnly: true,    
+            secure: true,      
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60 * 1000, 
+        })
+        res.status(200).json({ message: "Login successfull", status: true, data: { checkUser } })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:"Internal Server Error [Login]",status:false})
+        res.status(500).json({ message: "Internal Server Error [Login]", status: false })
     }
 }
 
-export const Register = async (req,res)=>{
+export const Register = async (req, res) => {
     try {
-        const {name, email, password, confirmPassword} = req.body
-        if(!name || !email || !password || !confirmPassword){
-            return res.status(400).json({message:"All fields are required", status:false})
+        const { email, password, confirmPassword } = req.body
+        if (!email || !password || !confirmPassword) {
+            return res.status(400).json({ message: "All fields are required", status: false })
         }
         let checkPassword = password === confirmPassword
-        if(!checkPassword){
-            return res.status(400).json({message:"Password and Confirm Password not match", status:false})
+        if (!checkPassword) {
+            return res.status(400).json({ message: "Password and Confirm Password not match", status: false })
         }
-        const existedUser = await User.findOne({email})
-        if(existedUser){
-            return res.status(400).json({message:"User already exists",status:false})
+        const existedUser = await User.findOne({ email })
+        if (existedUser) {
+            return res.status(400).json({ message: "User already exists", status: false })
         }
+        const name = email.split('@')[0]
+
         const genSalt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password,genSalt)
+        const hashedPassword = await bcrypt.hash(password, genSalt)
         const newUser = await User.create({
             name,
             email,
             password: hashedPassword
         })
-        res.status(201).json({message:"User registered successfully", status:true,data :newUser})
+        res.status(201).json({ message: "User registered successfully", status: true, data: newUser })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:"Internal Server Error [Register]",status:false})
+        res.status(500).json({ message: "Internal Server Error [Register]", status: false })
     }
 }
 
-export const GetUserById = async (req,res)=>{
+export const GetUserById = async (req, res) => {
     try {
         const userId = req.params.id
-        if(!userId){
-            return res.status(400).json({message:"User ID is required",status: false})
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required", status: false })
         }
         const user = await User.findById(userId).select("-password")
-        if(!user){
-            return res.status(404).json({message:"User not existd",status:false})
+        if (!user) {
+            return res.status(404).json({ message: "User not existd", status: false })
         }
-        res.status(200).json({message:"Get user by ID successfull",status: true, data : user})
+        res.status(200).json({ message: "Get user by ID successfull", status: true, data: user })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:"Internal Server Error [GetUserById]",status:false})
+        res.status(500).json({ message: "Internal Server Error [GetUserById]", status: false })
     }
 }
 
-export const GetAllUsers = async (req,res)=>{
+export const GetAllUsers = async (req, res) => {
     try {
         const users = await User.find().select("-password")
-        res.status(200).json({message:"Get all users successfull", status:true, data: users})
+        res.status(200).json({ message: "Get all users successfull", status: true, data: users })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:"Internal Server Error [GetAllUsers]",status:false})
+        res.status(500).json({ message: "Internal Server Error [GetAllUsers]", status: false })
     }
 }
 
-export const UpdateUserById = async (req,res)=>{
+export const UpdateUserById = async (req, res) => {
     try {
         const userId = req.params.id
-        const {name, email,phone,address, role, status} = req.body
-        if(!userId){
-            return res.status(400).json({message:"User ID is required",status: false})
+        const { name, email, phone, address, role, status } = req.body
+        console.log(req.body)
+        console.log(phone)
+        console.log(address)
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required", status: false })
         }
-        const user = await User.findByIdAndUpdate(userId,{
+        const checkUser = await User.findById(userId);
+        if (!checkUser) {
+            return res.status(400).json({ message: "User not found", status: false })
+        }
+        let avatarData = checkUser.avatar;
+        if (req.file) {
+            if (checkUser.avatar?.public_id) {
+                await deleteImage(checkUser.avatar.public_id);
+            }
+            avatarData = await uploadImage(
+                req.file.path,
+                "avatars"
+            );
+            fs.unlinkSync(req.file.path);
+        }
+        const user = await User.findByIdAndUpdate(userId, {
             name,
             email,
             phone,
             address,
             role,
-            status
-        }, {new: true}).select("-password")
-        if(!user){
-            return res.status(404).json({message:"User not existd",status:false})
+            status,
+            avatar: avatarData
+        }, { new: true }).select("-password")
+        if (!user) {
+            return res.status(404).json({ message: "User not existd", status: false })
         }
-        res.status(200).json({message:"User updated successfully",status:true, data:user})
+        res.status(200).json({ message: "User updated successfully", status: true, data: user })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:"Internal Server Error [UpdateUserById]",status:false})
+        res.status(500).json({ message: "Internal Server Error [UpdateUserById]", status: false })
     }
 }
 
-export const DeleteUserById = async (req,res)=>{  
+export const DeleteUserById = async (req, res) => {
     try {
         const userId = req.params.id
-        if(!userId){
-            return res.status(400).json({message:"User ID is required",status: false})
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required", status: false })
         }
         await User.findByIdAndDelete(userId)
-        res.status(200).json({message:"User deleted successfully",status:true})
+        res.status(200).json({ message: "User deleted successfully", status: true })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:"Internal Server Error [DeleteUserById]",status:false})
-    }  
+        res.status(500).json({ message: "Internal Server Error [DeleteUserById]", status: false })
+    }
 }
 

@@ -3,14 +3,19 @@ import { useForm } from 'react-hook-form'
 import register1 from '../../public/register.png'
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { AxiosHttp } from '../libs/BaseAxios';
+import { fetchUser } from '../redux-toolkit/userSlice';
+
 const Profile = () => {
     const { register, handleSubmit, reset } = useForm()
     const [hidePass, setHidePass] = useState(false)
     const [hideComfirmPass, setHideComfirmPass] = useState(false)
     const selected = useSelector((state) => state.user)
-    const [changeAvatar,setChangeAvatar] = useState()
+    const [changeAvatar, setChangeAvatar] = useState()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (selected) {
@@ -20,11 +25,52 @@ const Profile = () => {
                 address: selected.address,
                 phone: selected.phone,
             })
+            setChangeAvatar(selected.avatar.url)
         }
     }, [selected, reset])
 
-    const EditProfile = (data) => {
-        console.log(data)
+    const EditProfile = async (data) => {
+        try {
+            if (!data) {
+                toast.error("Update profile failed")
+            }
+            const formdata = new FormData()
+            formdata.append('name', data.name)
+            formdata.append('phone', data.phone)
+            formdata.append('address', data.address)
+            formdata.append('images', changeAvatar)
+
+            const res = await AxiosHttp.patch(`/user/update/${selected.id}`, formdata, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+
+            if (res.data.status) {
+                const { checkUser } = res.data.data
+
+                dispatch(fetchUser({
+                    id: checkUser._id,
+                    email: checkUser.email,
+                    name: checkUser.name,
+                    role: checkUser.role,
+                    phone: checkUser.phone,
+                    address: checkUser.address,
+                    avatar: [{
+                        url: checkUser.url,
+                        public_id: checkUser.public_id
+                    }]
+                }))
+            }
+            if (!res.data.status) {
+                toast.error("Something wrong went update profile")
+                console.log(res.message)
+            } else {
+                toast.success("Update profile success")
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
     return (
         <form className='flex items-center justify-center  gap-4 p-4 ' onSubmit={handleSubmit(EditProfile)}>
@@ -39,7 +85,7 @@ const Profile = () => {
                         </div>
                         <div className='flex flex-col gap-2'>
                             <label>Email : </label>
-                            <input {...register("email", { required: true })} required placeholder='Huypham@gmail.com' type="email" className='outline-none border border-gray-300 font-normal rounded-md p-2' />
+                            <input {...register("email", { required: true })} readOnly type="email" className='text-gray-700 cursor-not-allowed outline-none border border-gray-300 font-normal rounded-md p-2' />
                         </div>
                         <div className='flex flex-col gap-2'>
                             <label>Address : </label>
@@ -83,13 +129,13 @@ const Profile = () => {
                         id="avatar"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e)=>setChangeAvatar(URL.createObjectURL(e.target.files[0]))}
+                        onChange={(e) => setChangeAvatar(URL.createObjectURL(e.target.files[0]))}
                     />
 
                     <label htmlFor="avatar" className="cursor-pointer w-1/2">
-                    <div className="w-full max-w-full h-[300px]  overflow-hidden rounded-2xl shadow-lg ">
-                        <img src={changeAvatar ? changeAvatar : register1} className='w-full h-full object-cover' />
-                    </div>
+                        <div className="w-full max-w-full h-[300px]  overflow-hidden rounded-2xl shadow-lg ">
+                            <img src={changeAvatar ? changeAvatar : ''} className='w-full h-full object-cover' />
+                        </div>
                     </label>
                 </div>
             </div>
