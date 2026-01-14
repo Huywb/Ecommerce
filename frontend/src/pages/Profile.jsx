@@ -56,10 +56,10 @@ const Profile = () => {
                     role: checkUser.role,
                     phone: checkUser.phone,
                     address: checkUser.address,
-                    avatar: [{
+                    avatar: {
                         url: checkUser.url,
                         public_id: checkUser.public_id
-                    }]
+                    }
                 }))
             }
             if (!res.data.status) {
