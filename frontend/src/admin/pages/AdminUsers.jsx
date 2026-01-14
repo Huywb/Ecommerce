@@ -1,27 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UsersAdmin } from '../contants/DataAdmin'
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { useOutletContext } from 'react-router-dom';
+import { AxiosHttp } from '../../libs/BaseAxios';
+import userImage from '../../../public/user.png'
 const AdminUsers = () => {
-
     const {EditUserById} = useOutletContext();
-
     const [page,setPage] = useState(1);
+    const [listUser,setListUser] = useState([])
     
     const handleDeleteUser = (index) => {
         console.log("Delete user at index:", index);
     }
 
     const handleEditUser = (index) => {
-        EditUserById(UsersAdmin.find(item=>item.id ==  index));
+        EditUserById(listUser.find(item=>item._id ==  index));
+        console.log(listUser.find(item=>item._id ==  index))
     }
 
     let productPerPage = 6
-    let totalPage = Math.ceil(UsersAdmin.length/ productPerPage)
+    let totalPage = Math.ceil(listUser.length/ productPerPage)
     let start = (page - 1) * productPerPage;
     let end = start + productPerPage;
-    let currentUsers = UsersAdmin.slice(start, end);
+    let currentUsers = listUser.slice(start, end);
+
+    useEffect(()=>{
+        const fetchAllUser = async()=>{
+            const res = await AxiosHttp.get('/user/all')
+            const data = await res.data
+            setListUser(data.data)
+        }
+        fetchAllUser()
+    },[])
   return (
       <div className='flex flex-col px-6  gap-2 text-white mt-4 text-xs md:text-sm'>
           <h1 className='text-xl font-semibold bg-[#262626] rounded-lg p-2'>All Users</h1>
@@ -33,8 +44,14 @@ const AdminUsers = () => {
                   <div className='w-2/8 '>
                       <h2>User</h2>
                   </div>
-                  <div className='w-3/8 '>
+                  <div className='w-2/8 '>
                       <h2>Email</h2>
+                  </div>
+                  <div className='w-1/8 '>
+                      <h2>Phone</h2>
+                  </div>
+                  <div className='w-1/8 '>
+                      <h2>Address</h2>
                   </div>
                   <div className='w-1/8 '>
                       <h2>Role</h2>
@@ -50,13 +67,19 @@ const AdminUsers = () => {
                   currentUsers.map((item, index) => (
                       <div key={index} className='flex w-full border-t border-gray-800 p-2 items-center justify-center'>
                           <div className='w-1/8 '>
-                              <img src={item.avatar} alt="user image" className='w-10 h-10 rounded-lg' />
+                              <img src={item.avatar.url ?item.avatar.url : userImage} alt="user image" className='w-10 h-10 rounded-lg' />
                           </div>
                           <div className='w-2/8 '>
                               <h2>{item.name}</h2>
                           </div>
-                          <div className='w-3/8 '>
+                          <div className='w-2/8 '>
                               <h2>{item.email}</h2>
+                          </div>
+                          <div className='w-1/8 '>
+                              <h2>{item.phone ? item.phone : 'N/A'}</h2>
+                          </div>
+                          <div className='w-1/8 '>
+                              <h2>{item.address ? item.address : 'N/A'}</h2>
                           </div>
                           <div className='w-1/8 '>
                               <h2 className={`px-2 py-1 ${item.role === "Admin" ? "bg-green-500" : "bg-red-500"} w-fit rounded-lg`}>{item.role}</h2>
@@ -66,8 +89,8 @@ const AdminUsers = () => {
                               <h2 className={`px-2 py-1 ${item.status === "Active" ? "bg-green-500" : "bg-red-500"} w-fit rounded-lg`}>{item.status}</h2>
                           </div>
                           <div className='w-1/8 flex gap-2 '>
-                              <FaEdit onClick={() => handleEditUser(item.id)} size={24} className='text-green-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
-                              <MdDeleteForever onClick={() => handleDeleteUser(item.id)} size={24} className='text-red-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
+                              <FaEdit onClick={() => handleEditUser(item._id)} size={24} className='text-green-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
+                              <MdDeleteForever onClick={() => handleDeleteUser(item._id)} size={24} className='text-red-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
                           </div>
                       </div>
                   ))
