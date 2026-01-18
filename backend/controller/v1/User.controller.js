@@ -20,10 +20,10 @@ export const Login = async (req, res) => {
         }
         const token = generateAccessToken(checkUser)
         res.cookie('token', token, {
-            httpOnly: true,    
-            secure: true,      
+            httpOnly: true,
+            secure: true,
             sameSite: "strict",
-            maxAge: 24 * 60 * 60 * 1000, 
+            maxAge: 24 * 60 * 60 * 1000,
         })
         res.status(200).json({ message: "Login successfull", status: true, data: { checkUser } })
     } catch (error) {
@@ -93,9 +93,6 @@ export const UpdateUserById = async (req, res) => {
     try {
         const userId = req.params.id
         const { name, email, phone, address, role, status } = req.body
-        console.log(req.body)
-        console.log(phone)
-        console.log(address)
 
         if (!userId) {
             return res.status(400).json({ message: "User ID is required", status: false })
@@ -105,6 +102,7 @@ export const UpdateUserById = async (req, res) => {
             return res.status(400).json({ message: "User not found", status: false })
         }
         let avatarData = checkUser.avatar;
+        console.log(req.file)
         if (req.file) {
             if (checkUser.avatar?.public_id) {
                 await deleteImage(checkUser.avatar.public_id);
@@ -127,6 +125,7 @@ export const UpdateUserById = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not existd", status: false })
         }
+        console.log(user)
         res.status(200).json({ message: "User updated successfully", status: true, data: user })
     } catch (error) {
         console.log(error)
@@ -140,7 +139,14 @@ export const DeleteUserById = async (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: "User ID is required", status: false })
         }
-        await User.findByIdAndDelete(userId)
+        const deletedUser = await User.findByIdAndDelete({_id: userId})
+
+        if (!deletedUser) {
+            return res.status(404).json({
+                status: false,
+                message: "User not found"
+            })
+        }
         res.status(200).json({ message: "User deleted successfully", status: true })
     } catch (error) {
         console.log(error)
@@ -148,3 +154,38 @@ export const DeleteUserById = async (req, res) => {
     }
 }
 
+export const AddUser = async (req, res) => {
+    try {
+        const { name, email, phone, role, address, password } = req.body
+
+        const checkUser = await User.findOne({ email });
+        if (checkUser) {
+            return res.status(400).json({ message: "Email alreadi exist", status: false })
+        }
+        let avatarData = {}
+        if (req.file) {
+            avatarData = await uploadImage(
+                req.file.path,
+                "avatars"
+            );
+            fs.unlinkSync(req.file.path);
+        }
+        console.log(123)
+        const user = await User.create({
+            name,
+            email,
+            phone,
+            address,
+            role,
+            password,
+            avatar: avatarData
+        })
+        if (!user) {
+            return res.status(404).json({ message: "User not existd", status: false })
+        }
+        res.status(200).json({ message: "Add new User by Admin successfully", status: true, data: user })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal Server Error [AddUser]", status: false })
+    }
+}
