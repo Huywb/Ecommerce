@@ -15,7 +15,15 @@ const Profile = () => {
     const [hideComfirmPass, setHideComfirmPass] = useState(false)
     const selected = useSelector((state) => state.user)
     const [changeAvatar, setChangeAvatar] = useState()
+    const [previewAvatar,setPreviewAvatar] = useState()
     const dispatch = useDispatch()
+
+    const handleChangeAvatar = (e)=>{
+        const file = e.target.files[0]
+        if(!file) return
+        setChangeAvatar(file)
+        setPreviewAvatar(URL.createObjectURL(file))
+    }
 
     useEffect(() => {
         if (selected) {
@@ -25,7 +33,7 @@ const Profile = () => {
                 address: selected.address,
                 phone: selected.phone,
             })
-            setChangeAvatar(selected.avatar.url)
+            setPreviewAvatar(selected.avatar?.url || '')
         }
     }, [selected, reset])
 
@@ -38,7 +46,9 @@ const Profile = () => {
             formdata.append('name', data.name)
             formdata.append('phone', data.phone)
             formdata.append('address', data.address)
-            formdata.append('images', changeAvatar)
+            if(changeAvatar){
+                formdata.append('file', changeAvatar)
+            }
 
             const res = await AxiosHttp.patch(`/user/update/${selected.id}`, formdata, {
                 headers: {
@@ -47,8 +57,8 @@ const Profile = () => {
             })
 
             if (res.data.status) {
-                const { checkUser } = res.data.data
-
+                const checkUser = res.data.data
+                console.log(res.data.data)
                 dispatch(fetchUser({
                     id: checkUser._id,
                     email: checkUser.email,
@@ -57,8 +67,8 @@ const Profile = () => {
                     phone: checkUser.phone,
                     address: checkUser.address,
                     avatar: {
-                        url: checkUser.url,
-                        public_id: checkUser.public_id
+                        url: checkUser.avatar.url,
+                        public_id: checkUser.avatar.public_id
                     }
                 }))
             }
@@ -129,12 +139,12 @@ const Profile = () => {
                         id="avatar"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => setChangeAvatar(URL.createObjectURL(e.target.files[0]))}
+                        onChange={(e) => handleChangeAvatar(e)}
                     />
 
                     <label htmlFor="avatar" className="cursor-pointer w-1/2">
                         <div className="w-full max-w-full h-[300px]  overflow-hidden rounded-2xl shadow-lg ">
-                            <img src={changeAvatar ? changeAvatar : ''} className='w-full h-full object-cover' />
+                            <img src={previewAvatar} className='w-full h-full object-cover' />
                         </div>
                     </label>
                 </div>
