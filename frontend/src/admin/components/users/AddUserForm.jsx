@@ -5,14 +5,23 @@ import { toast } from 'react-toastify';
 import { AxiosHttp } from '../../../libs/BaseAxios';
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
 const AddUserForm = ({ InfoUser, showAddUserForm, ToggleShowAddUserForm }) => {
 
     const { register, handleSubmit, reset } = useForm()
-    const [changeAvatar, setChangeAvatar] = useState()
     const [mode, setMode] = useState('Add')
     const [hidePass, setHidePass] = useState(false)
     const [hideComfirmPass, setHideComfirmPass] = useState(false)
+    const [changeAvatar, setChangeAvatar] = useState()
+    const [previewAvatar,setPreviewAvatar] = useState()
+    const navigate = useNavigate()
 
+    const handleChangeAvatar = (e)=>{
+        const file = e.target.files[0]
+        if(!file) return
+        setChangeAvatar(file)
+        setPreviewAvatar(URL.createObjectURL(file))
+    }
     useEffect(() => {
         if (InfoUser) {
             reset({
@@ -22,7 +31,7 @@ const AddUserForm = ({ InfoUser, showAddUserForm, ToggleShowAddUserForm }) => {
                 address: InfoUser?.address || '',
                 role: InfoUser?.role || 'user',
             })
-            setChangeAvatar(InfoUser.avatar.url)
+            setPreviewAvatar(InfoUser.avatar.url || '')
             setMode('Edit')
         }
     }
@@ -41,42 +50,50 @@ const AddUserForm = ({ InfoUser, showAddUserForm, ToggleShowAddUserForm }) => {
         setMode("Add")
     }
 
+   
+
     const onSubmit = async (data) => {
         try {
-            console.log(data.password)
-            console.log(data.comfirmpassword)
-            console.log(mode)
             if (data.password !== data.comfirmpassword) {
                 toast.error("Password and Confirm Password not similar")
+                return
             }
             const formdata = new FormData()
             formdata.append('name', data.name)
             formdata.append('email', data.email)
             formdata.append('phone', data.phone)
             formdata.append('address', data.address)
+            formdata.append('role',data.role)
             formdata.append('password', data.password)
-            formdata.append('images', changeAvatar)
+            formdata.append('file', changeAvatar)
             if (mode == 'Add') {
                 const res = await AxiosHttp.post('/user/addUser', formdata, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
-                console.log(123)
-                console.log("add",res)
-                if (!res.status) {
+                if (!res.data.status) {
                     toast.error(res.message)
+                    return
                 }
+                toast.success("Add new user successfully")
+                navigate(0)
+                handleToggleClose()
+                
             } else {
                 const res = await AxiosHttp.patch(`/user/update/${InfoUser._id}`, formdata, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
-                console.log("update",res)
-                if(!res.status){
+                console.log(res)
+                if(!res.data.status){
                     toast.error(res.message)
+                    return
                 }
+                toast.success("Update user successfully")
+                navigate(0)
+                handleToggleClose()
             }
             reset({
                 name: '',
@@ -149,7 +166,7 @@ const AddUserForm = ({ InfoUser, showAddUserForm, ToggleShowAddUserForm }) => {
                             <div className='flex flex-col gap-2 relative'>
                                 <label>Confirm Password</label>
                                 <input type={hideComfirmPass ? 'text' : 'password'} {...register('comfirmpassword')} className='w-full border focus:ring-1 ring-gray-600 border-gray-600 outline-none p-2 rounded-lg bg-[#171717]' />
-                                <div onClick={() => setHidePass(!hidePass)} className='absolute text-xl right-2 cursor-pointer bottom-1/2 translate-y-2.5'>
+                                <div onClick={() => setHideComfirmPass(!hideComfirmPass)} className='absolute text-xl right-2 cursor-pointer bottom-1/2 translate-y-2.5'>
                                     {
                                         hideComfirmPass ? <IoEye ></IoEye> : <IoEyeOff></IoEyeOff>
                                     }
@@ -175,12 +192,12 @@ const AddUserForm = ({ InfoUser, showAddUserForm, ToggleShowAddUserForm }) => {
                             id="avatar"
                             accept="image/*"
                             className="hidden"
-                            onChange={(e) => setChangeAvatar(URL.createObjectURL(e.target.files[0]))}
+                            onChange={(e) => handleChangeAvatar(e)}
                         />
 
                         <label htmlFor="avatar" className="cursor-pointer w-1/2">
                             <div className="w-full max-w-full h-[300px]  overflow-hidden rounded-2xl shadow-lg ">
-                                <img src={changeAvatar ? changeAvatar : userAvatar} alt='avatar user' className='w-full h-full object-cover' />
+                                <img src={previewAvatar ? previewAvatar : userAvatar} alt='avatar user' className='w-full h-full object-cover' />
                             </div>
                         </label>
                     </div>
