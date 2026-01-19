@@ -8,7 +8,32 @@ const AdminProducts = () => {
   const { EditProductById } = useOutletContext();
   
   const handleEditProduct = (index) => {
-    EditProductById(ProductsAdmin.find(item=>item.id ==  index));
+    EditProductById({"_id": "65b8f1c2a9d4c81234abcd01",
+    "name": "Áo thun nam basic",
+    "description": "Áo thun cotton 100%, form regular",
+    "price": 199000,
+    "newArrival": true,
+    "category": "T-shirt",
+    "discount": 10,
+    "sizes": ["S", "M", "L"],
+    "variants": [
+      {
+        "color": "Đen",
+        "stocks": 10,
+        "image": {
+          "url": "https://res.cloudinary.com/demo/image/upload/v1700000000/products/black.jpg",
+          "public_id": "products/black"
+        }
+      },
+      {
+        "color": "Trắng",
+        "stocks": 5,
+        "image": {
+          "url": "https://res.cloudinary.com/demo/image/upload/v1700000000/products/white.jpg",
+          "public_id": "products/white"
+        }
+      }
+    ],});
   }
   const [page, setPage] = useState(1);
 

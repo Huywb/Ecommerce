@@ -27,6 +27,7 @@ const LayoutAdmin = () => {
   }
 
   const EditUserById = (item)=>{
+    console.log(item)
     setUserInfo(item)
     setShowAddUserForm(true)
   }
