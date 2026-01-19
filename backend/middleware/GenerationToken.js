@@ -38,7 +38,7 @@ export const validateAccessToken = (req,res,next)=>{
 
 export const checkRole = (...role)=>{
     return (req,res,next)=>{
-        if(!req.userRole !== !role.includes(req.user.role)){
+        if(!role.includes(req.userRole)){
             return res.status(403).json({message:"Forbidden: You do not have permission",status:false})
         }
         next()
