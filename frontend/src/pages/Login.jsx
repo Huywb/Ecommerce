@@ -24,8 +24,9 @@ const Login = () => {
                 const { email, password } = data
                 const res = await AxiosHttp.post('/user/login', data)
                 if (res.data.status) {
-                    const { token, checkUser } = res.data.data
+                    const { checkUser } = res.data.data
 
+                    console.log(checkUser)
                     dispatch(fetchUser({
                         id: checkUser._id,
                         email: checkUser.email,
@@ -33,7 +34,10 @@ const Login = () => {
                         role: checkUser.role,
                         phone: checkUser.phone,
                         address: checkUser.address,
-                        token
+                        avatar: {
+                            url: checkUser.avatar.url,
+                            public_id: checkUser.avatar.public_id
+                        }
                     }))
 
                     toast.success("Login success")

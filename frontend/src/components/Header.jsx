@@ -16,7 +16,6 @@ const Header = () => {
     const selected = useSelector((state) => state.user)
     const dispatch = useDispatch()
 
-    console.log(selected)
     const handleLogout = async()=>{
         dispatch(logout())
     }
