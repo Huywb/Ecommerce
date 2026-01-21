@@ -21,6 +21,7 @@ export const GetCategoryById = async(req,res)=>{
 export const GetAllCategory = async(req,res)=>{
     try {
         const allCategory = await Category.find()
+        console.log(allCategory)
         res.status(200).json({message:"Get all Category successfully",status:true, data : allCategory})
     } catch (error) {
         console.log(error)

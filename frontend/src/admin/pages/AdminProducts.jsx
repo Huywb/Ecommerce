@@ -3,50 +3,60 @@ import { ProductsAdmin, UsersAdmin } from '../contants/DataAdmin'
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { useOutletContext } from 'react-router-dom';
+import { useEffect } from 'react';
+import { AxiosHttp } from '../../libs/BaseAxios';
+import { toast } from 'react-toastify';
 const AdminProducts = () => {
 
   const { EditProductById } = useOutletContext();
-  
+  const [productAdmin, setProductAdmin] = useState([])
+
+
+  const totalStocks = (variants = []) => {
+    return variants.reduce((sum, item) => {
+      return sum + (item.stock || 0)
+    }, 0)
+  }
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const res = await AxiosHttp.get("/product/all")
+      const data = await res.data
+      setProductAdmin(data.data)
+    }
+    fetchProduct()
+  }, [])
+
   const handleEditProduct = (index) => {
-    EditProductById({"_id": "65b8f1c2a9d4c81234abcd01",
-    "name": "Áo thun nam basic",
-    "description": "Áo thun cotton 100%, form regular",
-    "price": 199000,
-    "newArrival": true,
-    "category": "T-shirt",
-    "discount": 10,
-    "sizes": ["S", "M", "L"],
-    "variants": [
-      {
-        "color": "Đen",
-        "stocks": 10,
-        "image": {
-          "url": "https://res.cloudinary.com/demo/image/upload/v1700000000/products/black.jpg",
-          "public_id": "products/black"
-        }
-      },
-      {
-        "color": "Trắng",
-        "stocks": 5,
-        "image": {
-          "url": "https://res.cloudinary.com/demo/image/upload/v1700000000/products/white.jpg",
-          "public_id": "products/white"
-        }
-      }
-    ],});
+    const data = productAdmin.filter(item=>item._id == index)
+    console.log("Edit product data:", data);
+    EditProductById(data);
   }
   const [page, setPage] = useState(1);
 
-  const handleDeleteProduct = (index) => {
-    console.log("Delete product at index:", index);
+  const handleDeleteProduct =async (index) => {
+    try {
+      const res = await AxiosHttp.delete(`/product/delete/${index}`)
+      if (res.data.status) {
+        alert("You have deleted this product")
+        toast.success("Delete product successfully")
+        window.location.reload()
+      } else {
+        toast.error("Delete product failed")
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error("Delete product failed")
+    }
+
   }
 
 
   let productPerPage = 6
-  let totalPage = Math.ceil(ProductsAdmin.length / productPerPage)
+  let totalPage = Math.ceil(productAdmin.length / productPerPage)
   let start = (page - 1) * productPerPage;
   let end = start + productPerPage;
-  let currentProducts = ProductsAdmin.slice(start, end);
+  let currentProducts = productAdmin.slice(start, end);
   return (
     <div className='flex flex-col px-6  gap-2 text-white mt-4 text-xs md:text-sm'>
       <h1 className='text-xl font-semibold bg-[#262626] rounded-lg p-2'>All Products</h1>
@@ -81,10 +91,10 @@ const AdminProducts = () => {
           </div>
         </div>
         {
-          currentProducts.map((item, index) => (
+          currentProducts?.map((item, index) => (
             <div key={index} className='flex gap-4 w-full border-t border-gray-800 p-2 items-center justify-center'>
               <div className='w-1/8 '>
-                <img src={item.image} alt="user image" className='w-10 h-10 rounded-lg' />
+                <img src={item.variants[0].image[0]?.url} alt="user image" className='w-10 h-10 rounded-lg' />
               </div>
               <div className='w-2/8 '>
                 <h2>{item.name}</h2>
@@ -102,14 +112,14 @@ const AdminProducts = () => {
                 <h2>{item.category}</h2>
               </div>
               <div className='w-1/8 text-center'>
-                <h2>{item.stock}</h2>
+                <h2>{totalStocks(item.variants)}</h2>
               </div>
               <div className='w-1/8 text-center'>
                 <h2>{item.discount}</h2>
               </div>
               <div className='w-1/8 flex gap-2 text-center'>
-                <FaEdit onClick={() => handleEditProduct(item.id)} size={24} className='text-green-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
-                <MdDeleteForever onClick={() => handleDeleteProduct(item.id)} size={24} className='text-red-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
+                <FaEdit onClick={() => handleEditProduct(item._id)} size={24} className='text-green-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
+                <MdDeleteForever onClick={() => handleDeleteProduct(item._id)} size={24} className='text-red-500 transition-all duration-300 opacity-50 cursor-pointer hover:opacity-95 ' />
               </div>
             </div>
           ))
