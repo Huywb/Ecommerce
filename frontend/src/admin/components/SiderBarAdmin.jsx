@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import logo from '../../../public/register.png'
-import { Application, Order, Product, User } from '../contants/DataAdmin'
+import { Application, Image, Order, Product, User } from '../contants/DataAdmin'
 import { FaPlus } from "react-icons/fa6";
 import { GoPerson } from "react-icons/go";
 import { IoIosLogOut } from "react-icons/io";
 
-const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserForm}) => {
+const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserForm, ToggleShowAddForm}) => {
     
     const SiderBarToggleShowAddProductForm = (value) => {
         ToggleShowAddProductForm(value)
@@ -46,8 +46,6 @@ const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserF
                 </>
                 }
                 </div>
-
-                
                 {
                     Product.map((item,index)=>(
                         <Link to={item.url} key={index} onClick={() => SiderBarToggleShowAddProductForm(item.type)} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
@@ -57,6 +55,7 @@ const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserF
                     ))
                 }
             </div>
+            
 
             <div className='flex flex-col gap-1 '>
                 <div className='flex justify-between items-center'>
@@ -87,6 +86,24 @@ const SiderBarAdmin = ({hideSiderBar,ToggleShowAddProductForm,ToggleShowAddUserF
                 {
                     Order.map((item,index)=>(
                         <Link to={item.url} key={index} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
+                            {item.icon}
+                            {hideSiderBar ? '' : <span>{item.name}</span>}
+                        </Link>
+                    ))
+                }
+            </div>
+
+            <div className='flex flex-col gap-1 '>
+                <div className='flex justify-between items-center'>
+                {hideSiderBar ? '' : <>
+                <span className='text-[#959595]'>Banner / Logo</span>
+                <FaPlus className='cursor-pointer'></FaPlus>
+                </>
+                }
+                </div>
+                {
+                    Image.map((item,index)=>(
+                        <Link to={item.url} key={index} onClick={()=>ToggleShowAddForm(item.type)} className='flex py-2 hover:bg-[#262626] duration-300 transition-all rounded-lg items-center gap-2'>
                             {item.icon}
                             {hideSiderBar ? '' : <span>{item.name}</span>}
                         </Link>
