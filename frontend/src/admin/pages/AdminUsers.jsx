@@ -17,6 +17,8 @@ const AdminUsers = () => {
     }
 
     const handleDeleteUser = async (id) => {
+        const isConfirm = window.confirm("Are you sure deleted this product?")
+        if (!isConfirm) return
         try {
             console.log(id)
             const res = await AxiosHttp.delete(`/user/delete/${id}`)
@@ -24,7 +26,6 @@ const AdminUsers = () => {
                 toast.error("Something wrong try again !!!")
                 return
             }
-            console.log(res)
             toast.success('Delete user successfull')
             navigate(0)
         } catch (error) {

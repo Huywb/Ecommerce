@@ -35,10 +35,11 @@ const AdminProducts = () => {
   const [page, setPage] = useState(1);
 
   const handleDeleteProduct =async (index) => {
+    const isConfirm = window.confirm("Are you sure deleted this product?")
+    if (!isConfirm) return
     try {
       const res = await AxiosHttp.delete(`/product/delete/${index}`)
       if (res.data.status) {
-        alert("You have deleted this product")
         toast.success("Delete product successfully")
         window.location.reload()
       } else {
